@@ -1,7 +1,6 @@
 name: $(BuildDefinitionName)_[$(Date:ddMMyyyy)]
 
-pool:
-  vmImage: 'Default'
+pool: Default
 
 trigger:
   batch: true
