@@ -1,0 +1,6 @@
+vm_name="ChellrachAdoAgentVm"
+log_analytics_workspace_name="ChellrachAksWorkspace"
+log_analytics_resource_group_name="ChellrachRG"
+virtual_network_resource_group_name="ChellrachRG"
+virtual_network_name="ChellrachAksVNet"
+subnet_name="ChellrachVmSubnet"
