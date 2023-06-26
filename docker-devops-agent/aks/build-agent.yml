@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-agent
+  labels:
+    app: devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops
+  template:
+    metadata:
+      labels:
+        app: devops
+      name: devops-agent
+    spec:
+      securityContext:
+        fsGroup: 65534
+      containers:
+        - name: devops-agent
+          securityContext:
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp-volume
+            - mountPath: /azp
+              name: azp-volume
+          image: ghcr.io/groovy-sky/devops-build-agent:latest
+          command: ['sh', '-c', 'cp start.sh $TMPDIR/ && cd $TMPDIR && ./start.sh']
+          env:
+            - name: TMPDIR
+              value: /tmp
+            - name: AZP_URL
+              value: "https://dev.azure.com/3ap9lq"
+            - name: AZP_AGENT_NAME
+              value: "devops-agent"
+            - name: AZP_POOL
+              value: "aks-pool"
+            - name: AZP_TOKEN
+              valueFrom: 
+                secretKeyRef:
+                  key: AZP_TOKEN
+                  name: devops-secrets
+      volumes:
+      - name: azp-volume
+        emptyDir: {}
+      - name: tmp-volume
+        emptyDir: {}
